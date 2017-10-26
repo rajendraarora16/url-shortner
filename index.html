@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Google URL shortner API</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript">
+            
+            function generateShortUrl() {
+                $("#copyShortURL").text('Copy URL');
+                $.ajax({
+                    url: 'https://www.googleapis.com/urlshortener/v1/url?shortUrl=http://goo.gl/fbsS&key=AIzaSyC4bjESDcXYSZrfLwXyhsAp_Fwv83o4v-8',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: '{ longUrl: "' + document.getElementById("long-url").value +'"}',
+                    beforeSend: function(){
+                        $("#long-url").css({ 'background': '#e8e8e8' });
+                        $("#short-url").val("Generating..");    
+                    },
+                    complete : function() {
+                        $("#long-url").css({ 'background': '#fff' });
+    
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        $("#short-url").val(response["id"]); // Evaluate the J-Son response object.
+                    }
+                });
+            }
+    
+            function copyShortUrl() {
+                $("#short-url").select();
+                document.execCommand('copy');
+                $("#copyShortURL").text('Copied!');
+            }
+        
+        </script>
+    </head>
+    <body>
+        <div>
+            <h1>Google URL shortner API</h1>
+        </div><br/>
+        <div>
+            <div >
+                <strong>Long URL:</strong> &nbsp;<input id="long-url" class="long-url-input" type="text" placeholder="Type your long URL here" onFocus="this.select()"/>
+                <br/><br/>
+                <strong>Shortned URL:</strong> &nbsp;<input id="short-url" class="short-url-input" type="text" value="Shortned URL" onFocus="this.select()" readonly/>
+            </div>
+        </div><br/><br/>
+        <div>
+            <button id="generateShortURL" type="button" onclick="generateShortUrl();">Generate shortened URL</button>
+            <button id="copyShortURL" type="button" onclick="copyShortUrl();">Copy URL</button>
+        </div>
+    </body>
+</html>
